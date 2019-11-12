@@ -6,18 +6,18 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 
 class heap{
-	int[] start;
-	int[] end;
-	int[] length;
+	long[] start;
+	long[] end;
+	long[] length;
 	int size;
 	heap(){
-		start=new int[1];
-		end=new int[1];
-		length=new int[1];
+		start=new long[1];
+		end=new long[1];
+		length=new long[1];
 		size=0;
 	}
 	
-	void push(int s,int e,int l) {
+	void push(long s,long e,long l) {
 		if(size==start.length-1) {
 			sizeUp();
 		}
@@ -40,14 +40,13 @@ class heap{
 		}
 	}
 	
-	int[] pop() {
+	long[] pop() {
 		
 		if(size==0) {
 			System.out.println("힙비어있음");
-			return null;
 		}
 		
-		int[] result= new int[]{start[1], end[1], length[1]};
+		long[] result= new long[]{start[1], end[1], length[1]};
 		
 		start[1]=start[size];
 		end[1]=end[size];
@@ -90,9 +89,9 @@ class heap{
 	}
 
 	private void swap(int p, int nodenum) {
-		int tmp1=start[p];
-		int tmp2=end[p];
-		int tmp3=length[p];
+		long tmp1=start[p];
+		long tmp2=end[p];
+		long tmp3=length[p];
 		start[p]=start[nodenum];
 		end[p]=end[nodenum];
 		length[p]=length[nodenum];
@@ -105,9 +104,9 @@ class heap{
 
 	private void sizeUp() {
 		int nextsize=start.length<<1;
-		int[] tmp1=new int[nextsize<<1];
-		int[] tmp2=new int[nextsize<<1];
-		int[] tmp3=new int[nextsize<<1];
+		long[] tmp1=new long[nextsize<<1];
+		long[] tmp2=new long[nextsize<<1];
+		long[] tmp3=new long[nextsize<<1];
 		for(int i=0;i<size;i++) {
 			tmp1[i]=start[i];
 			tmp2[i]=end[i];
@@ -117,6 +116,7 @@ class heap{
 		start=tmp1;
 		end=tmp2;
 		length=tmp3;
+//		size=nextsize;
 	}
 }
 
@@ -146,6 +146,7 @@ class indexlist{
 		}
 		index=tmp;
 		length=tmp2;
+//		size<<=1;
 	}
 }
 
@@ -158,11 +159,11 @@ public class Solution가장짧은길전부청소하기 {
 			String[] s=br.readLine().split(" ");
 			int n=Integer.parseInt(s[0]);
 			int m=Integer.parseInt(s[1]);
-			int answer=0;
+			long answer=0;
 			int max=0;
-			int[] lengths=new int[n];
+			long[] lengths=new long[n];
 			for(int i=1;i<n;i++) {
-				lengths[i]=987654321;
+				lengths[i]=2000000000;
 			}
 			boolean[] check=new boolean[n];
 			indexlist[] lists=new indexlist[n];
@@ -175,46 +176,48 @@ public class Solution가장짧은길전부청소하기 {
 				int start=Integer.parseInt(s[0]);
 				int end=Integer.parseInt(s[1]);
 				int length=Integer.parseInt(s[2]);
+//				System.out.println(length);
 				lists[start-1].add(end-1, length);
 				lists[end-1].add(start-1, length);
 			}
 			heap hp=new heap();
 			int count=1;
 			for(int i=0;i<lists[0].size;i++) {
+//				System.out.println((lists[0].length[i]));
 				lengths[lists[0].index[i]]=lists[0].length[i];
 				hp.push(0, lists[0].index[i], lists[0].length[i]);
 			}
 			while(!hp.isEmpty()) {
-				int[] tmp=hp.pop();
-				if(check[tmp[1]]) {
+				long[] tmp=hp.pop();
+				int tmp1=(int)tmp[1];
+				if(check[tmp1]) {
 					System.out.println("걸러짐");
 					continue;
 				}
-				check[tmp[1]]=true;
-				for(int i=0;i<lists[tmp[1]].size;i++) {
-					if(lengths[lists[tmp[1]].index[i]] > lengths[tmp[1]]+lists[tmp[1]].length[i]) {
-						lengths[lists[tmp[1]].index[i]]=lengths[tmp[1]]+lists[tmp[1]].length[i];
-						System.out.println(lengths[lists[tmp[1]].index[1]]);
-						hp.push(0, lists[tmp[1]].index[i], lengths[lists[tmp[1]].index[i]]);
+				check[tmp1]=true;
+				for(int i=0;i<lists[tmp1].size;i++) {
+					if(lengths[lists[tmp1].index[i]] > lengths[tmp1]+lists[tmp1].length[i]) {
+						lengths[lists[tmp1].index[i]]=lengths[tmp1]+lists[tmp1].length[i];
+						System.out.println(lengths[lists[tmp1].index[i]]);
+						hp.push(0, lists[tmp1].index[i], lengths[lists[tmp1].index[i]]);
 					}
 				}
 				
 			}
 			System.out.println(Arrays.toString(lengths));
-			for(int i=0;i<lists[0].size;i++) {
-				hp.push(0, lists[0].index[i], lists[0].length[i]);
-			}
-			check=new boolean[n];
-			check[0]=true;
-			while(!hp.isEmpty()) {
-				int[] tmp=hp.pop();
-				if(check[tmp[1]]) {
-					continue;
+//			System.out.println(Arrays.toString(lengths));
+			for (int i=1;i<n;i++) {
+				long min = 1000000000;
+				for (int j=0;j<lists[i].size;j++) {
+					int k = lists[i].index[j];
+					int c = lists[i].length[j];
+					if (lengths[k] + (long)c == lengths[i]) {
+						min=Math.min(min, (long)c);
+					}
 				}
-				for(int i=0;i<lists[tmp[1]].size;i++) {
-					
-				}
+				answer+=(long)min;
 			}
+			System.out.println("#"+tc+" "+answer);
 			
 		}
 	}

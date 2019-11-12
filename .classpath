@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry excluding="algorithm/backjun/|pro/|algorithm/swexpert/" kind="src" path=""/>
+	<classpathentry kind="src" path="algorithm/backjun"/>
+	<classpathentry kind="src" path="algorithm/swexpert"/>
+	<classpathentry kind="src" path="pro"/>
+	<classpathentry kind="output" path="algorithm/bin"/>
+</classpath>
